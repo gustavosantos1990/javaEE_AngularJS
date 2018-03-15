@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<html ng-app="produtosApp">
+    <head>
+        <title>Aplicação com JavaEE + AngularJS</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body ng-controller="ProdutosController">
+        <!-- Cadastro -->
+        <form>
+            <h1>Cadastro</h1>
+            <label for="codigo">Código: </label>
+            <input id="codigo" name="codigo" type="text" ng-model="produto.id">
+            <br>
+            <label for="descricao">Descrição: </label>
+            <input id="descricao" name="descricao" type="text" ng-model="produto.descricao">
+            <br>
+            <label for="preco">Preço: </label>
+            <input id="preco" name="preco" type="text" ng-model="produto.preco">
+            <button ng-click="salvar(produto)">Salvar</button>
+            <button ng-click="cancelar()">Cancelar</button>
+
+        </form>
+
+        <!-- Tabela de Preços -->
+        <h1>Tabela de Preços</h1>
+        <table>
+            <thead>
+            <th>Código</th>
+            <th>Descrição</th>
+            <th>Preço</th>
+            <th></th>
+            <th></th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="produto in produtos track by $index">
+                <td ng-dblclick="editar(produto)">{{produto.id}}</td>
+                <td ng-dblclick="editar(produto)">{{produto.descricao}}</td>
+                <td ng-dblclick="editar(produto)">{{produto.preco}}</td>
+                <td><a href="" ng-click="excluir(produto)">[Excluir]</a></td>
+                <td><a href="" ng-click="editar(produto)">[Editar]</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <script src="js/angular.min.js"></script>
+    <script>
+                            var app = angular.module('produtosApp', []);
+
+                            app.controller('ProdutosController', function ($scope, ProdutosService) {
+
+
+                                $scope.produto = {};
+
+                                listar();
+
+                                function listar() {
+                                    ProdutosService.listar().then(function (resposta) {
+                                        $scope.produtos = resposta.data;
+                                    });
+                                }
+                                ;
+
+                                $scope.cancelar = function () {
+                                    $scope.produto = {};
+                                }
+
+                                $scope.salvar = function (produto) {
+                                    ProdutosService.salvar(produto).then(listar);
+                                    $scope.produto = {};
+                                };
+
+
+                                $scope.editar = function (produto) {
+                                    $scope.produto = angular.copy(produto);
+                                };
+
+                                $scope.excluir = function (produto) {
+                                    ProdutosService.excluir(produto).then(listar);
+                                };
+
+                            });
+
+                            app.service('ProdutosService', function ($http) {
+
+                                var api = 'http://localhost:3000/produtos';
+
+                                this.listar = function () {
+                                    return $http.get('http://localhost:3000/produtos');
+                                }
+
+                                this.salvar = function (produto) {
+                                    if (produto.id) {
+                                        // PUT - Atualizar 
+                                        return $http.put(api + '/' + produto.id, produto);
+
+                                    } else {
+                                        // POST - Salvar
+                                        return $http.post(api, produto);
+                                    }
+                                };
+
+
+                                this.excluir = function (produto) {
+                                    return $http.delete(api + '/' + produto.id);
+                                }
+
+                            });
+
+
+    </script>
+</body>
+</html>

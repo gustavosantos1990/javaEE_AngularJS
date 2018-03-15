@@ -1,0 +1,19 @@
+{
+  "produtos": [
+    {
+      "descricao": "Agrião",
+      "preco": 2.5,
+      "id": 4
+    },
+    {
+      "descricao": "Almeirão",
+      "preco": 2.5,
+      "id": 5
+    },
+    {
+      "descricao": "Taióba",
+      "preco": "0.50",
+      "id": 6
+    }
+  ]
+}
