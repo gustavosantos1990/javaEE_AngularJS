@@ -29,17 +29,15 @@ public class ProdutoService {
     @PersistenceContext(unitName = "produtosPU")
     private EntityManager em;
     
-    static Integer contador;
     List<Produto> produtos;
 
     public ProdutoService() {
-        contador = 1;
         produtos = new ArrayList<>();
     }
 
     @GET
     public List<Produto> getProdutos() {
-        Query query = em.createQuery("SELECT p FROM Produto p");
+        Query query = em.createQuery("SELECT p FROM Produto p ORDER BY p.id");
         return query.getResultList();
     }
 
@@ -69,6 +67,15 @@ public class ProdutoService {
     public Produto getProduto(@PathParam("id") Integer id) {
         return em.find(Produto.class, id);
     }
+
+    public EntityManager getEm() {
+        return em;
+    }
+
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
+    
     
     
 }

@@ -17,7 +17,7 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "produtos", schema = "public")
-@TableGenerator(name = "produtos_generator")
+@TableGenerator(name = "produtos_generator", initialValue = 1, allocationSize = 1)
 public class Produto implements Serializable {
     
     @Id
